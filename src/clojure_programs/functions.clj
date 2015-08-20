@@ -19,3 +19,25 @@
 
 (def highOrdExistFunc
   ((fn [f] (f 5)) square))
+
+(defn transform
+  [f data]
+  (if (first data)
+    (cons (f (first data))
+          (transform f (rest data)))
+    (list)))
+
+(defn expand
+  [f x count]
+  (if (pos? count)
+    (cons x (expand f (f x) (dec count)))
+    (list)
+    ))
+
+(defn filter1 [f coll]
+  (loop [c coll
+         acc '()]
+    (cond (= c '()) acc
+          (= true (f (first c))) (recur (rest c) (cons (first c) acc) )
+          :else (recur (rest c) acc)
+          )))
