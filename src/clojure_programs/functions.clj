@@ -41,3 +41,25 @@
           (= true (f (first c))) (recur (rest c) (cons (first c) acc) )
           :else (recur (rest c) acc)
           )))
+
+(defn is-prime?
+  [n]
+  (let [x (quot n 2)]
+    (loop [i 2
+           res true]
+      (cond (zero? (mod n i)) false
+            (> i x) res
+            :else (recur (inc i) res) ) ) ) )
+
+(defn n-primes
+  [n]
+  (take n (filter is-prime? (iterate inc 1))))
+
+(defn get-char-frequency
+  [c word]
+  (let [s (seq word)]
+    (loop [w s
+           cnt 0]
+      (cond (nil? (first w)) cnt
+            (= c (first w)) (recur (rest w) (inc cnt))
+            :else (recur (rest w) cnt)))))
