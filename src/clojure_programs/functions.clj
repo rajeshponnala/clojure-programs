@@ -1,9 +1,7 @@
 (ns clojure-programs.functions
   (:gen-class))
 
-(defn multiply-by-ten
-  [n]
-  (* 10 n))
+
 
 (defn square [n] (* n n))
 
@@ -36,9 +34,9 @@
 
 (defn filter1 [f coll]
   (loop [c coll
-         acc '()]
+         acc []]
     (cond (= c '()) acc
-          (= true (f (first c))) (recur (rest c) (cons (first c) acc) )
+          (true? (f (first c))) (recur (rest c) (conj acc (first c)) )
           :else (recur (rest c) acc)
           )))
 
@@ -49,7 +47,7 @@
            res true]
       (cond (zero? (mod n i)) false
             (> i x) res
-            :else (recur (inc i) res) ) ) ) )
+            :else (recur(inc i)res)))))
 
 (defn n-primes
   [n]
@@ -63,3 +61,34 @@
       (cond (nil? (first w)) cnt
             (= c (first w)) (recur (rest w) (inc cnt))
             :else (recur (rest w) cnt)))))
+
+(defn filter2 [p coll]
+  (for [ x  coll :when (p x)] x))
+
+(defn last1 [coll]
+  (loop [c coll]
+    (let [[first & re] c]
+      (cond (empty? re) first
+            :else (recur (rest re))))))
+
+(defn dropnthitem [n coll]
+  (loop [c coll cnt 1 acc []]
+    (cond (empty? c) acc
+          (zero? (mod cnt n)) (recur (rest c) (inc cnt) acc)
+          :else (recur (rest c) (inc cnt) (conj acc (first c))))))
+
+(defn map-construct [keys values]
+  (loop [k keys v values acc {}]
+    (cond (or (empty? k) (empty? v)) acc
+          :else (recur (rest k) (rest v) (conj acc [(first k) (first v)])))))
+
+(defn map-defaults [val keys]
+  (loop [k keys  acc {}]
+    (cond (empty? k) acc
+          :else (recur (rest k) (conj acc [(first k) val])))))
+
+
+
+
+
+
