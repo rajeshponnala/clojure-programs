@@ -88,7 +88,15 @@
           :else (recur (rest k) (conj acc [(first k) val])))))
 
 
+(defn max1 [coll]
+  (reduce (fn [x y]
+            (if (> x y) x y)) coll))
 
+(defn is-perfect? [n]
+  (= n (reduce (fn [x y] (if (zero? (mod n y)) (+ x y) x)) (range n))))
 
+(defn read-data [filename]
+  (clojure.string/split-lines (slurp (clojure.java.io/file "Latin-Lipsum.txt")))
+  )
 
 
