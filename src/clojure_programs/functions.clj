@@ -95,9 +95,14 @@
 (defn is-perfect? [n]
   (= n (reduce (fn [x y] (if (zero? (mod n y)) (+ x y) x)) (range n))))
 
-(defn read-data [filename]
-  (clojure.string/split-lines (slurp (clojure.java.io/file "Latin-Lipsum.txt")))
-  )
+(defn get-lines [filename]
+  (clojure.string/split-lines (slurp (clojure.java.io/file "/home/rajesh/"filename))))
+
+(defn get-words [filename]
+  (apply concat (map (fn [l] (vec (.split l " "))) (get-lines filename))))
+
+(defn word-count [filename]
+  (count (get-words filename)))
 
 (defn index [e coll]
   (loop [c coll pos 0]
