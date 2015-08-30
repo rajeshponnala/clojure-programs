@@ -99,4 +99,9 @@
   (clojure.string/split-lines (slurp (clojure.java.io/file "Latin-Lipsum.txt")))
   )
 
-
+(defn index [e coll]
+  (loop [c coll pos 0]
+    (let [[first & re] c]
+      (cond (= first e) pos
+            (empty? re) -1
+            :else (recur re (inc pos))))))
