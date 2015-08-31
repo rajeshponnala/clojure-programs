@@ -96,10 +96,10 @@
   (= n (reduce (fn [x y] (if (zero? (mod n y)) (+ x y) x)) (range n))))
 
 (defn get-lines [filename]
-  (clojure.string/split-lines (slurp (clojure.java.io/file "/home/rajesh/"filename))))
+  (remove clojure.string/blank? (clojure.string/split-lines (slurp (clojure.java.io/file "/home/rajesh/"filename)))))
 
 (defn get-words [filename]
-  (mapcat (fn [l] (vec (.split l " "))) (get-lines filename)))
+  (mapcat (fn [l] (vec (clojure.string/split (clojure.string/replace l #"[.,]" "") #"\s+")))(get-lines filename)))
 
 (defn word-count [filename]
   (count (get-words filename)))
@@ -110,3 +110,12 @@
       (cond (= first e) pos
             (empty? re) -1
             :else (recur re (inc pos))))))
+
+(defn word-frequency [word filename]
+  (let [w (clojure.string/lower-case word)]
+    (count (filter (fn [w1] (= w (clojure.string/lower-case w1))) (get-words filename)))))
+
+(defn grep1 [word filename]
+  (apply concat (filter (fn [[k v]] (.contains v word)) (zipmap (range) (get-lines filename)))))
+
+
