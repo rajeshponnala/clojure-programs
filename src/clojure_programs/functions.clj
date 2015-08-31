@@ -99,7 +99,7 @@
   (clojure.string/split-lines (slurp (clojure.java.io/file "/home/rajesh/"filename))))
 
 (defn get-words [filename]
-  (apply concat (map (fn [l] (vec (.split l " "))) (get-lines filename))))
+  (mapcat (fn [l] (vec (.split l " "))) (get-lines filename)))
 
 (defn word-count [filename]
   (count (get-words filename)))
