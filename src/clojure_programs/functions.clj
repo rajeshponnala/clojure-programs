@@ -1,5 +1,8 @@
 (ns clojure-programs.functions
-  (:gen-class))
+  (:gen-class)
+  (:use [clojure.string :only
+         [lower-case split blank? split-lines]])
+  (:use [clojure.java.io :only [file]]))
 
 
 
@@ -95,27 +98,34 @@
 (defn is-perfect? [n]
   (= n (reduce (fn [x y] (if (zero? (mod n y)) (+ x y) x)) (range n))))
 
+(defn split-line [line]
+  (vec (split (clojure.string/replace line #"[.,]" "") #"\s+")))
+
 (defn get-lines [filename]
-  (remove clojure.string/blank? (clojure.string/split-lines (slurp (clojure.java.io/file "/home/rajesh/"filename)))))
+  (remove blank? (split-lines (slurp (file "/home/rajesh/"filename)))))
 
 (defn get-words [filename]
-  (mapcat (fn [l] (vec (clojure.string/split (clojure.string/replace l #"[.,]" "") #"\s+")))(get-lines filename)))
+  (mapcat split-line  (get-lines filename)))
 
 (defn word-count [filename]
   (count (get-words filename)))
 
-(defn index [e coll]
-  (loop [c coll pos 0]
-    (let [[first & re] c]
-      (cond (= first e) pos
-            (empty? re) -1
-            :else (recur re (inc pos))))))
-
 (defn word-frequency [word filename]
-  (let [w (clojure.string/lower-case word)]
-    (count (filter (fn [w1] (= w (clojure.string/lower-case w1))) (get-words filename)))))
+  (let [w (lower-case word)]
+    (count (filter (fn [w1] (= w (lower-case w1))) (get-words filename)))))
 
 (defn grep1 [word filename]
-  (apply concat (filter (fn [[k v]] (.contains v word)) (zipmap (range) (get-lines filename)))))
+  (let [w (lower-case word)]
+    (into {} (filter (fn [[k v]] (isword-contains? w (lower-case v))) (zipmap (range) (get-lines filename))))))
+
+(defn index [filename]
+  (reduce (fn [x w] ( conj x [w (keys (grep1 w filename))])) {} (get-words filename)))
+
+(defn isword-contains? [word line]
+  (let [w (lower-case word) coll (split-line line) ]
+    (loop [c coll]
+      (cond (empty? c) false
+            (= w (first c)) true
+            :else (recur (rest c))))))
 
 
