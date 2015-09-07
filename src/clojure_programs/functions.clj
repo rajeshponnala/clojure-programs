@@ -114,6 +114,10 @@
   (let [w (lower-case word)]
     (count (filter (fn [w1] (= w (lower-case w1))) (get-words filename)))))
 
+(defn grep1 [word filename]
+  (let [w (lower-case word)]
+    (into {} (filter (fn [[k v]] (isword-contains? w (lower-case v))) (zipmap (range) (get-lines filename))))))
+
 (defn index [filename]
   (reduce (fn [x w] ( conj x [w (keys (grep1 w filename))])) {} (get-words filename)))
 
@@ -123,6 +127,8 @@
       (cond (empty? c) false
             (= w (first c)) true
             :else (recur (rest c))))))
+
+
 
 (defn unique [coll]
   (loop [c coll res [] buf []]
@@ -147,3 +153,5 @@
     (cond (and (zero? (mod cnt n1)) (zero? (mod cnt n2))) cnt
           :else (recur (inc cnt)))))
 
+(defn lcm2 [coll]
+  (reduce lcm 1  coll))
