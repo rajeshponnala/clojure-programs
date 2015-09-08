@@ -20,3 +20,6 @@
 
 (defn symm-diff [s1 s2]
   (union (difference s1 s2) (difference s2 s1)))
+
+(defn reverse-interleave [coll n]
+  (for [i (range n)] (take-nth n (drop i coll))))
