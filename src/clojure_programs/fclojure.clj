@@ -23,3 +23,6 @@
 
 (defn reverse-interleave [coll n]
   (for [i (range n)] (take-nth n (drop i coll))))
+
+(defn dropnthitem [n coll]
+  (keep-indexed #(if (not (zero? (mod %1 n))) %2) coll))
