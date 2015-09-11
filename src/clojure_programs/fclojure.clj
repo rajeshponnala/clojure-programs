@@ -25,4 +25,7 @@
   (for [i (range n)] (take-nth n (drop i coll))))
 
 (defn dropnthitem [n coll]
-  (keep-indexed #(if (not (zero? (mod %1 n))) %2) coll))
+  (keep-indexed #(if (not (zero? (mod (+ %1 1) n))) %2) coll))
+
+(defn seqofpairs [vc]
+  (map vector vc (range)))
