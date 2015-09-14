@@ -29,3 +29,17 @@
 
 (defn seqofpairs [vc]
   (map vector vc (range)))
+
+;;A balanced number is one whose component digits have the same sum on the left and right halves of the number. Write a function which accepts an integer n, and returns true iff n is balanced.
+(defn balance-number [n]
+  (let [ve (vec (seq (str n))) cnt (count ve)
+        nu (quot cnt 2) midpos (if (even? cnt) nu (inc nu)) ]
+    (cond (= cnt 1) true
+          (= cnt 2) (= (first ve) (last ve))
+          :else (= (reduce (fn [a c] (+ a (read-string (str c)))) 0 (subvec ve 0 (- midpos 1)))
+                   (reduce (fn [a c] (+ a (read-string (str c)))) 0 (subvec ve midpos))))))
+
+;;Write a function which returns a map containing the number of occurences of each distinct item in a sequence.
+(defn noofocc [coll]
+  (reduce (fn [a e] ( if (contains? a e) (update-in a [e] inc)
+                        (assoc a e 1))) {} coll))
